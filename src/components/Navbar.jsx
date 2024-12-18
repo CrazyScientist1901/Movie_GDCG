@@ -18,9 +18,9 @@ export default function Navbar({ cartCount }) {
             <a href="#" className="hover:text-gray-300">
               Categories
             </a>
-            <a href="#" className="hover:text-gray-300">
+            <NavLink to="/top-rated" className="hover:text-gray-300">
               Top Rated
-            </a>
+            </NavLink>
           </div>
         </div>
 
