@@ -1,109 +1,41 @@
-// Importing necessary React hooks and components
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import Navbar from "./Navbar";
+import TopRatedMovies from "./TopRatedMovies";
+import Cart from "./Cart"; // Assuming Cart component exists or will be created
+import HomePage from "./HomePage"; // Optional: separate HomePage component for better structure
 
-// Importing custom components for the application
-import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import MovieList from "./components/MovieList";
-import toast from 'react-hot-toast'; // For displaying notification toasts
-import CartItems from "./components/CartItems";
-import { BrowserRouter, Routes, Route } from "react-router"; // For handling routing
+function App() {
+  const cartCount = 5; // Example cart item count, this can be fetched from state or context
 
-export default function App() {
-  // State management for cart items
-  // Initialize cart from localStorage if exists, otherwise start with an empty array
-  const [cart, setCart] = useState(() => {
-    const storedCart = localStorage.getItem("cart");
-    return storedCart ? JSON.parse(storedCart) : [];
-  });
-
-  // State to store recommended movies
-  const [recMovies, setRecMovies] = useState([]);
-
-  // Effect to synchronize cart state with localStorage
-  // Runs every time cart state changes
-  useEffect(() => {
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
-
-  // Function to add a movie to the cart
-  const addToCart = async (movie) => {
-    // Check if movie is already in the cart
-    const movieInCart = cart.find((item) => item.id === movie.id);
-
-    if (movieInCart) {
-      // Show error toast if movie is already in cart
-      toast.error('Item is already in the cart.');
-    } else {
-      try {
-        // Add movie to cart
-        setCart([...cart, movie]);
-        // Show success toast
-        toast.success('Item added to the cart.');
-
-      } catch (error) {
-        // Log and show error if recommendation fetch fails
-        console.error('Error while fetching recommendations:', error);
-        toast.error('Failed to fetch recommendations.');
-      }
-    }
-  };
-  
-  // Function to remove a movie from the cart
-  const removeFromCart = (movieId) => {
-    // Find the movie in the cart
-    const movieInCart = cart.find((movie) => movie.id == movieId);
-
-  
-    if (movieInCart) {
-      // Remove the movie from cart
-      setCart(cart.filter((movie) => movie.id !== movieId));
-      // Show success toast
-      toast.success('Item removed from the cart.');
-    } else {
-      // Show error toast if movie is not in cart
-      toast.error('Item is not in the cart.');
-    }
-  };
-
-  // Render the application layout and routes
   return (
-    <BrowserRouter>
-      <div className="bg-black text-white">
-        {/* Navbar with cart item count */}
-        <Navbar cartCount={cart.length} />
-        
-        {/* Define application routes */}
-        <Routes>
-          {/* Home route */}
-          <Route
-            path="/"
-            element={
-              <>
-                {/* Hero section */}
-                <Hero />
-                
-                {/* Show recommended items if available */}
-                {recMovies.length > 0 && (
-                  <RecommendedItems movies={recMovies}/>
-                )}
-                
-                {/* Movie list with add to cart functionality */}
-                <MovieList addToCart={addToCart}/>
-              </>
-            }
-          />
-          
-          {/* Cart route */}
-          <Route
-            path="/cart"
-            element={
-              <CartItems cart={cart} removeFromCart={removeFromCart}/>
-            }
-          />
-        </Routes>
-        
-      </div>
-    </BrowserRouter>
+    <Router>
+      {/* Render the Navbar across all pages */}
+      <Navbar cartCount={cartCount} />
+      <main className="bg-gray-900 text-white min-h-screen">
+        {/* Define routes for different pages */}
+        <Switch>
+          <Route path="/" exact>
+            {/* Use a separate HomePage component for scalability */}
+            <HomePage />
+          </Route>
+          <Route path="/top-rated">
+            <TopRatedMovies />
+          </Route>
+          <Route path="/cart">
+            <Cart />
+          </Route>
+          {/* Add a fallback route for 404 Not Found */}
+          <Route>
+            <div className="text-center p-6">
+              <h1 className="text-4xl font-bold">404</h1>
+              <p className="text-gray-400">Page Not Found</p>
+            </div>
+          </Route>
+        </Switch>
+      </main>
+    </Router>
   );
 }
+
+export default App;
