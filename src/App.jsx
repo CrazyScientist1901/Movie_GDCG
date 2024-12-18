@@ -1,41 +1,83 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Navbar from "./Navbar";
-import TopRated from "./TopRated";
-import Cart from "./Cart"; // Assuming Cart component exists or will be created
-import HomePage from "./HomePage"; // Optional: separate HomePage component for better structure
+// Importing necessary React hooks and components
+import React, { useState, useEffect } from "react";
 
-function App() {
-  const cartCount = 5; // Example cart item count, this can be fetched from state or context
+// Importing custom components for the application
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import MovieList from "./components/MovieList";
+import TopRatedMovies from "./components/TopRatedMovies"; // Added TopRatedMovies component
+import CartItems from "./components/CartItems";
+import HomePage from "./components/HomePage"; // Added HomePage component
+import toast from "react-hot-toast"; // For displaying notification toasts
+import { BrowserRouter, Routes, Route } from "react-router-dom"; // Corrected import for routing
+
+export default function App() {
+  // State management for cart items
+  // Initialize cart from localStorage if exists, otherwise start with an empty array
+  const [cart, setCart] = useState(() => {
+    const storedCart = localStorage.getItem("cart");
+    return storedCart ? JSON.parse(storedCart) : [];
+  });
+
+  // Effect to synchronize cart state with localStorage
+  // Runs every time cart state changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
+
+  // Function to add a movie to the cart
+  const addToCart = async (movie) => {
+    const movieInCart = cart.find((item) => item.id === movie.id);
+
+    if (movieInCart) {
+      toast.error("Item is already in the cart.");
+    } else {
+      try {
+        setCart([...cart, movie]);
+        toast.success("Item added to the cart.");
+      } catch (error) {
+        console.error("Error while fetching recommendations:", error);
+        toast.error("Failed to fetch recommendations.");
+      }
+    }
+  };
+
+  // Function to remove a movie from the cart
+  const removeFromCart = (movieId) => {
+    const movieInCart = cart.find((movie) => movie.id === movieId);
+
+    if (movieInCart) {
+      setCart(cart.filter((movie) => movie.id !== movieId));
+      toast.success("Item removed from the cart.");
+    } else {
+      toast.error("Item is not in the cart.");
+    }
+  };
 
   return (
-    <Router>
-      {/* Render the Navbar across all pages */}
-      <Navbar cartCount={cartCount} />
-      <main className="bg-gray-900 text-white min-h-screen">
-        {/* Define routes for different pages */}
-        <Switch>
-          <Route path="/" exact>
-            {/* Use a separate HomePage component for scalability */}
-            <HomePage />
-          </Route>
-          <Route path="/top-rated">
-            <TopRated />
-          </Route>
-          <Route path="/cart">
-            <Cart />
-          </Route>
-          {/* Add a fallback route for 404 Not Found */}
-          <Route>
-            <div className="text-center p-6">
-              <h1 className="text-4xl font-bold">404</h1>
-              <p className="text-gray-400">Page Not Found</p>
-            </div>
-          </Route>
-        </Switch>
-      </main>
-    </Router>
+    <BrowserRouter>
+      <div className="bg-black text-white">
+        {/* Navbar with cart item count */}
+        <Navbar cartCount={cart.length} />
+
+        {/* Define application routes */}
+        <Routes>
+          {/* Home route */}
+          <Route
+            path="/"
+            element={<HomePage addToCart={addToCart} />}
+          />
+
+          {/* Top Rated Movies route */}
+          <Route path="/top-rated" element={<TopRatedMovies />} />
+
+          {/* Cart route */}
+          <Route
+            path="/cart"
+            element={<CartItems cart={cart} removeFromCart={removeFromCart} />}
+          />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
-
-export default App;
