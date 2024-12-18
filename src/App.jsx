@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import Navbar from "./Navbar";
-import TopRatedMovies from "./TopRatedMovies";
+import TopRated from "./TopRated";
 import Cart from "./Cart"; // Assuming Cart component exists or will be created
 import HomePage from "./HomePage"; // Optional: separate HomePage component for better structure
 
@@ -20,7 +20,7 @@ function App() {
             <HomePage />
           </Route>
           <Route path="/top-rated">
-            <TopRatedMovies />
+            <TopRated />
           </Route>
           <Route path="/cart">
             <Cart />
