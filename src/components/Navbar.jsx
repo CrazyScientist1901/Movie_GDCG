@@ -13,9 +13,6 @@ export default function Navbar({ cartCount }) {
             <NavLink to="/MovieList" className="hover:text-gray-300">
               Home
             </NavLink>
-            <NavLink to="/categories" className="hover:text-gray-300">
-              Categories
-            </NavLink>
             <NavLink to="/top-rated" className="hover:text-gray-300">
               Top Rated
             </NavLink>
