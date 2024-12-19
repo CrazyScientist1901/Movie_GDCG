@@ -12,11 +12,11 @@ export default function TopRatedMovies() {
             try {
                 // API call to fetch popular movies
                 // Uses RapidAPI to get movie data
-                const response = await fetch('https://imdb8.p.rapidapi.com/title/v2/get-popular?first=20&country=US&language=en-US', {
+                const response = await fetch('/title/get-coming-soon-movies?homeCountry=US&purchaseCountry=US&currentCountry=US', {
                     method: 'GET',
                     headers: {
                         // API key and host for authentication
-                        'x-rapidapi-key': '0176cef2bcmsh87a7de68de66d51p1e03e1jsnba19cbc9b4d6',
+                        'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
                         'x-rapidapi-host': 'imdb8.p.rapidapi.com'
                     }
                 });
