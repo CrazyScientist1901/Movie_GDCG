@@ -2,6 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom"; // Use Link for routing
 
 export default function CartItems({ cart, removeFromCart }) {
+  // Debugging: Log the cart prop
+  console.log("Cart Items:", cart);
+
   return (
     <div className="p-6 text-white min-h-screen mt-10">
       <h1 className="text-3xl font-bold text-center mb-6">Your Cart</h1>
@@ -49,7 +52,7 @@ export default function CartItems({ cart, removeFromCart }) {
         <div className="flex flex-col items-center mt-10">
           <p className="text-lg text-gray-400 mb-4">Your cart is currently empty!</p>
           <Link
-            to="/movies"
+            to="/MovieList" // Ensure this path is correct
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
           >
             Browse Movies
