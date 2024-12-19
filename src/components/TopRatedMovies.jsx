@@ -1,51 +1,39 @@
 import React, { useState, useEffect } from "react";
 
-export default function TopRated() {
+export default function TopRatedMovies() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-   const fetchMovies = async () => {
-            try {
-                // API call to fetch popular movies
-                // Uses RapidAPI to get movie data
-                const response = await fetch('/title/get-coming-soon-movies?homeCountry=US&purchaseCountry=US&currentCountry=US', {
-                    method: 'GET',
-                    headers: {
-                        // API key and host for authentication
-                    'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
-		'x-rapidapi-host': 'imdb8.p.rapidapi.com'
-                    }
-                });
+    const fetchTopRatedMovies = async () => {
+      try {
+        const response = await fetch('https://imdb8.p.rapidapi.com/title/v2/get-popular?first=20&country=US&language=en-US', {
+          method: 'GET',
+          headers: {
+            'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
+            'x-rapidapi-host': 'imdb8.p.rapidapi.com',
+          },
+        });
 
-        // Check for successful response
         if (!response.ok) {
-          throw new Error(`Failed to fetch top-rated movies: ${response.statusText}`);
+          throw new Error('Failed to fetch top-rated movies');
         }
 
         const data = await response.json();
-        
-        // Log the entire response data to inspect its structure
-        console.log("API Response Data:", data);
+        const transformedMovies = data.data.movies.edges.map((edge, index) => ({
+          id: edge.node.id || `movie-${index}`,
+          name: edge.node.titleText?.text || 'Unknown Title',
+          rating: edge.node.ratingsSummary?.aggregateRating || 0,
+          image: edge.node.primaryImage?.url || '/images/Dark.png',
+          genres: edge.node.titleGenres?.genres
+            ? edge.node.titleGenres.genres.slice(0, 4).map((g) => g.genre.text)
+            : [],
+        }));
 
-        // Check if the expected data structure exists
-        if (data && data.data && data.data.movies && Array.isArray(data.data.movies.edges)) {
-          const transformedMovies = data.data.movies.edges.map((edge, index) => ({
-            id: edge.node.id || `movie-${index}`,
-            name: edge.node.titleText?.text || 'Unknown Title',
-            rating: edge.node.ratingsSummary?.aggregateRating || 0,
-            image: edge.node.primaryImage?.url || '/images/placeholder.png',
-          }));
-
-          setMovies(transformedMovies);
-          setIsLoading(false);
-        } else {
-          throw new Error('Invalid movie data format or missing data');
-        }
-
+        setMovies(transformedMovies);
+        setIsLoading(false);
       } catch (err) {
-        console.error('Error fetching data:', err); // Log error for debugging
         setError(err.message);
         setIsLoading(false);
       }
@@ -55,26 +43,37 @@ export default function TopRated() {
   }, []);
 
   if (isLoading) {
-    return <div>Loading Top Rated Movies...</div>;
+    return <div className="text-white p-6 text-center">Loading Top Rated Movies...</div>;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="text-white p-6 text-center">Error: {error}</div>;
   }
 
   return (
-    <div className="p-6 text-white">
+    <div className="p-6 text-white min-h-screen mt-10">
       <h1 className="text-3xl font-bold text-center mb-6">Top Rated Movies</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {movies.map((movie) => (
-          <div key={movie.id} className="bg-gray-800 p-4 rounded-lg shadow-lg">
-            <img
-              src={movie.image}
-              alt={movie.name}
-              className="w-full h-56 object-contain mb-4"
-            />
-            <h2 className="text-lg font-bold">{movie.name}</h2>
-            <p className="text-gray-400">Rating: {movie.rating}/10</p>
+          <div key={movie.id} className="relative group rounded-lg overflow-hidden">
+            <div className="relative bg-black text-white rounded-lg shadow-lg border-2 border-yellow-500 hover:border-yellow-400">
+              <img
+                src={movie.image}
+                alt={movie.name}
+                className="w-full h-56 object-contain rounded-t-lg"
+              />
+              <div className="p-4">
+                <h2 className="text-lg font-semibold">{movie.name}</h2>
+                <p className="text-gray-400">Rating: {movie.rating}/10</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {movie.genres.map((genre, index) => (
+                    <span key={index} className="px-2 py-1 text-xs bg-gray-800 border border-gray-600 rounded-full">
+                      {genre}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         ))}
       </div>
