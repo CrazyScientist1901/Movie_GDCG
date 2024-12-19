@@ -31,18 +31,13 @@ export default function TopRatedMovies() {
         const data = await response.json();
         console.log(data); // Log the full response to verify the structure
 
-        // Check if the expected properties exist
-        if (data && data.comingSoon && data.comingSoon.edges) {
+        // Assuming the response structure is something like `data.comingSoon.edges`
+        if (data?.comingSoon?.edges) {
           const transformedMovies = data.comingSoon.edges.map((edge, index) => ({
-            // Generate a unique ID, using the API ID or creating one
             id: edge.node.id || `movie-${index}`,
-            // Extract movie title, using 'Unknown Title' as a fallback
             name: edge.node.titleText?.text || "Unknown Title",
-            // Extract movie rating, default to 0 if not available
             rating: edge.node.ratingsSummary?.aggregateRating || 0,
-            // Extract movie image URL, use a default image if not available
             image: edge.node.primaryImage?.url || "/images/Dark.png",
-            // Extract up to 4 genres, or use an empty array
             genres: edge.node.titleGenres?.genres
               ? edge.node.titleGenres.genres.slice(0, 4).map((g) => g.genre.text)
               : [],
