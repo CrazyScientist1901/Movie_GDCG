@@ -10,7 +10,7 @@ export default function Navbar({ cartCount }) {
             GdgMovie
           </NavLink>
           <div className="hidden md:flex space-x-4">
-            <NavLink to="/" className="hover:text-gray-300">
+            <NavLink to="/MovieList" className="hover:text-gray-300">
               Home
             </NavLink>
             <NavLink to="/categories" className="hover:text-gray-300">
