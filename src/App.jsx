@@ -5,7 +5,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import MovieList from "./components/MovieList";
-import TopRatedMovies from "./components/TopRatedMovies";
+import TopRatedMovies from "./components/ComingSoon";
 import CartItems from "./components/CartItems";
 import HomePage from "./components/HomePage"; // Added HomePage component
 import toast from "react-hot-toast"; // For displaying notification toasts
@@ -59,7 +59,7 @@ export default function App() {
           <Route path="/movielist" element={<MovieList addToCart={addToCart} />} />
 
           {/* Route for Top Rated Movies */}
-          <Route path="/top-rated" element={<TopRatedMovies />} />
+          <Route path="/ComingSoon" element={<TopRatedMovies />} />
 
           {/* Route for Cart */}
           <Route
