@@ -13,7 +13,7 @@ export default function MovieList() {
       const response = await fetch('https://imdb8.p.rapidapi.com/title/v2/get-popular?first=20&country=US&language=en-US', {
         method: 'GET',
         headers: {
-         'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
+          'x-rapidapi-key': 'YOUR_API_KEY', // Replace with your actual API key
           'x-rapidapi-host': 'imdb8.p.rapidapi.com',
         },
       });
@@ -50,7 +50,12 @@ export default function MovieList() {
   const addToCart = (movie) => {
     // Avoid adding duplicate movies
     if (!cart.some((item) => item.id === movie.id)) {
-      setCart((prevCart) => [...prevCart, movie]);
+      setCart((prevCart) => {
+        const newCart = [...prevCart, movie];
+        console.log("Added to cart:", movie);
+        console.log("Current cart:", newCart);
+        return newCart;
+      });
       alert(`${movie.name} added to cart!`);
     } else {
       alert(`${movie.name} is already in the cart.`);
@@ -59,7 +64,12 @@ export default function MovieList() {
 
   // Remove movie from cart
   const removeFromCart = (id) => {
-    setCart((prevCart) => prevCart.filter((movie) => movie.id !== id));
+    setCart((prevCart) => {
+      const newCart = prevCart.filter((movie) => movie.id !== id);
+      console.log("Removed from cart:", id);
+      console.log("Current cart:", newCart);
+      return newCart;
+    });
   };
 
   // Debugging: Log cart state
@@ -86,7 +96,7 @@ export default function MovieList() {
   return (
     <div className="p-6 text-white min-h-screen mt-10">
       <h1 className="text-3xl font-bold text-center mb-6">Popular Movies</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap -6">
         {movies.map((movie) => (
           <div
             key={movie.id}
