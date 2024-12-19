@@ -57,26 +57,24 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="bg-black text-white">
-        {/* Navbar with cart item count */}
-        <Navbar cartCount={cart.length} />
-
-        {/* Define application routes */}
+         <Navbar cartCount={cart.length} />
         <Routes>
-          {/* Home route */}
           <Route
             path="/"
             element={<HomePage addToCart={addToCart} />}
           />
+          {/* Route for Home/MovieList */}
+          <Route path="/" element={<MovieList />} />
 
-          {/* Top Rated Movies route */}
+          {/* Optional: Route for MovieList directly */}
+          <Route path="/MovieList" element={<MovieList />} />
+
+          {/* Other routes */}
           <Route path="/top-rated" element={<TopRatedMovies />} />
-
-          {/* Cart route */}
           <Route
             path="/cart"
             element={<CartItems cart={cart} removeFromCart={removeFromCart} />}
           />
-          
         </Routes>
       </div>
     </BrowserRouter>
