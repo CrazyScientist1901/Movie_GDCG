@@ -42,20 +42,7 @@ export default function Navbar({ cartCount }) {
 
         {/* Search and Cart */}
         <div className="flex items-center space-x-4">
-          {/* Search Bar */}
-          <div className="relative hidden sm:block">
-            <input
-              type="search"
-              placeholder="Search movies..."
-              className="pl-10 pr-4 py-2 rounded-full bg-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              aria-label="Search movies"
-            />
-            <Search
-              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-              size={20}
-            />
-          </div>
-
+        
           {/* Cart Icon */}
           <NavLink to="/cart" aria-label="View cart">
             <button className="relative hover:text-gray-300 p-2">
