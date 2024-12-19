@@ -12,12 +12,12 @@ export default function TopRatedMovies() {
             try {
                 // API call to fetch popular movies
                 // Uses RapidAPI to get movie data
-                const response = await fetch('/title/get-coming-soon-movies?homeCountry=US&purchaseCountry=US&currentCountry=US', {
+                const response = await fetch('/title/v2/get-coming-soon?comingSoonType=MOVIE&first=20&country=US&language=en-US', {
                     method: 'GET',
                     headers: {
                         // API key and host for authentication
                         'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
-                        'x-rapidapi-host': 'imdb8.p.rapidapi.com'
+                      'x-rapidapi-host': 'online-movie-database.p.rapidapi.com
                     }
                 });
                 
