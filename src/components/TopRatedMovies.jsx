@@ -19,21 +19,18 @@ export default function TopRated() {
           }
         );
 
-        // Log the status and raw response for debugging
-        const responseText = await response.text();
-        console.log("Response Text:", responseText);
-
+        // Check for successful response
         if (!response.ok) {
           throw new Error(`Failed to fetch top-rated movies: ${response.statusText}`);
         }
 
-        const data = JSON.parse(responseText);
+        const data = await response.json();
         
-        // Log the entire response to inspect its structure
+        // Log the entire response data to inspect its structure
         console.log("API Response Data:", data);
 
-        // Check the response structure directly
-        if (data && data.data && data.data.movies && data.data.movies.edges) {
+        // Check if the expected data structure exists
+        if (data && data.data && data.data.movies && Array.isArray(data.data.movies.edges)) {
           const transformedMovies = data.data.movies.edges.map((edge, index) => ({
             id: edge.node.id || `movie-${index}`,
             name: edge.node.titleText?.text || 'Unknown Title',
