@@ -13,7 +13,7 @@ export default function MovieList() {
       const response = await fetch('https://imdb8.p.rapidapi.com/title/v2/get-popular?first=20&country=US&language=en-US', {
         method: 'GET',
         headers: {
-          'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
+          'x-rapidapi-key': 'YOUR_API_KEY', // Replace with your actual API key
           'x-rapidapi-host': 'imdb8.p.rapidapi.com',
         },
       });
@@ -50,7 +50,7 @@ export default function MovieList() {
   const addToCart = (movie) => {
     // Avoid adding duplicate movies
     if (!cart.some((item) => item.id === movie.id)) {
-      setCart([...cart, movie]);
+      setCart((prevCart) => [...prevCart, movie]);
       alert(`${movie.name} added to cart!`);
     } else {
       alert(`${movie.name} is already in the cart.`);
@@ -59,8 +59,13 @@ export default function MovieList() {
 
   // Remove movie from cart
   const removeFromCart = (id) => {
-    setCart(cart.filter((movie) => movie.id !== id));
+    setCart((prevCart) => prevCart.filter((movie) => movie.id !== id));
   };
+
+  // Debugging: Log cart state
+  useEffect(() => {
+    console.log("Current cart:", cart);
+  }, [cart]);
 
   if (isLoading) {
     return (
@@ -91,7 +96,7 @@ export default function MovieList() {
               <img
                 src={movie.image}
                 alt={movie.name}
-                className="w-full h-56 object-contain rounded-t-lg transition-transform transform group-hover:scale-105"
+                className="w-full h-56 object-contain rounded-t-lg transition -transform transform group-hover:scale-105"
               />
               <div className="p-4">
                 <h2 className="text-lg font-semibold">{movie.name}</h2>
