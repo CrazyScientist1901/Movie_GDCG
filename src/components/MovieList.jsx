@@ -23,7 +23,7 @@ export default function MovieList() {
       }
 
       const data = await response.json();
-      const transformedMovies = data.data.movies.edges.map((edge, index) => ({
+ const transformedMovies = data.data.movies.edges.map((edge, index) => ({
         id: edge.node.id || `movie-${index}`,
         name: edge.node.titleText?.text || 'Unknown Title',
         rating: edge.node.ratingsSummary?.aggregateRating || 0,
@@ -48,7 +48,6 @@ export default function MovieList() {
 
   // Add movie to cart
   const addToCart = (movie) => {
-    // Avoid adding duplicate movies
     if (!cart.some((item) => item.id === movie.id)) {
       setCart((prevCart) => {
         const newCart = [...prevCart, movie];
@@ -96,7 +95,7 @@ export default function MovieList() {
   return (
     <div className="p-6 text-white min-h-screen mt-10">
       <h1 className="text-3xl font-bold text-center mb-6">Popular Movies</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap -6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {movies.map((movie) => (
           <div
             key={movie.id}
@@ -106,7 +105,7 @@ export default function MovieList() {
               <img
                 src={movie.image}
                 alt={movie.name}
-                className="w-full h-56 object-contain rounded-t-lg transition -transform transform group-hover:scale-105"
+                className="w-full h-56 object-contain rounded-t-lg transition-transform transform group-hover:scale-105"
               />
               <div className="p-4">
                 <h2 className="text-lg font-semibold">{movie.name}</h2>
