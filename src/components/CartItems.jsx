@@ -1,40 +1,37 @@
 import React from "react";
 
 // CartItems Component: Displays the user's selected movies in a cart
-export default function CartItems({ cart, removeFromCart }) {
+export default function CartItems({ cart = [], removeFromCart }) {
   return (
-    // Full-screen container with padding
     <div className="p-6 text-white min-h-screen mt-10">
-      {/* Page title */}
+      {/* Page Title */}
       <h1 className="text-3xl font-bold text-center mb-6">Your Cart</h1>
 
-      {/* Conditionally render cart contents */}
-      {cart.length > 0 ? (
-        // Responsive grid layout for cart items
+      {/* Check if cart has items */}
+      {cart && cart.length > 0 ? (
+        // Grid for cart items if the cart is not empty
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {cart.map((movie) => (
             <div
               key={movie.id}
               className="relative group rounded-lg overflow-hidden transition-transform transform hover:scale-105 hover:z-10"
             >
-              {/* Movie card */}
+              {/* Movie Card */}
               <div className="relative bg-black text-white rounded-lg shadow-lg border-2 border-yellow-500 hover:border-yellow-400">
-                {/* Movie poster */}
+                {/* Movie Poster */}
                 <img
                   src={movie.image}
                   alt={movie.name}
                   className="w-full h-56 object-cover rounded-t-lg"
                 />
 
-                {/* Movie details */}
+                {/* Movie Details */}
                 <div className="p-4">
-                  {/* Movie title */}
+                  {/* Title */}
                   <h2 className="text-lg font-semibold">{movie.name}</h2>
-                  
                   {/* Rating */}
                   <p className="text-gray-400">Rating: {movie.rating}/10</p>
-                  
-                  {/* Genre tags */}
+                  {/* Genres */}
                   <div className="mt-2 flex flex-wrap gap-2">
                     {movie.genres.map((genre, index) => (
                       <span
@@ -46,7 +43,7 @@ export default function CartItems({ cart, removeFromCart }) {
                     ))}
                   </div>
 
-                  {/* Remove from cart button */}
+                  {/* Remove Button */}
                   <div className="mt-4 flex justify-center">
                     <button
                       onClick={() => removeFromCart(movie.id)}
@@ -61,15 +58,15 @@ export default function CartItems({ cart, removeFromCart }) {
           ))}
         </div>
       ) : (
-        // Empty cart message
+        // Message for empty cart
         <div className="flex flex-col items-center mt-10">
           <p className="text-lg text-gray-400 mb-4">Your cart is empty!</p>
-          <a
-            href="/movies" // Replace with the correct route for your movie list
+          <button
+            onClick={() => window.location.href = "/"} // Update the path to your home or movie list route
             className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
           >
             Browse Movies
-          </a>
+          </button>
         </div>
       )}
     </div>
