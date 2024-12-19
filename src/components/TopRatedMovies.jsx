@@ -14,27 +14,36 @@ export default function TopRated() {
             method: 'GET',
             headers: {
               'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
-              'x-rapidapi-host': 'imdb8.p.rapidapi.com'
-            }
+              'x-rapidapi-host': 'imdb8.p.rapidapi.com',
+            },
           }
         );
 
         if (!response.ok) {
-          throw new Error('Failed to fetch top-rated movies');
+          throw new Error(`Failed to fetch top-rated movies: ${response.statusText}`);
         }
 
         const data = await response.json();
 
-        const transformedMovies = data.data.movies.edges.map((edge, index) => ({
-          id: edge.node.id || `movie-${index}`,
-          name: edge.node.titleText?.text || 'Unknown Title',
-          rating: edge.node.ratingsSummary?.aggregateRating || 0,
-          image: edge.node.primaryImage?.url || '/images/placeholder.png',
-        }));
+        // Log the full response for debugging
+        console.log(data);
 
-        setMovies(transformedMovies);
-        setIsLoading(false);
+        if (data?.data?.movies?.edges) {
+          const transformedMovies = data.data.movies.edges.map((edge, index) => ({
+            id: edge.node.id || `movie-${index}`,
+            name: edge.node.titleText?.text || 'Unknown Title',
+            rating: edge.node.ratingsSummary?.aggregateRating || 0,
+            image: edge.node.primaryImage?.url || '/images/placeholder.png',
+          }));
+
+          setMovies(transformedMovies);
+          setIsLoading(false);
+        } else {
+          throw new Error('Invalid movie data format');
+        }
+
       } catch (err) {
+        console.error('Error fetching data:', err); // Log error for debugging
         setError(err.message);
         setIsLoading(false);
       }
