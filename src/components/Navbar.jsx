@@ -28,14 +28,14 @@ export default function Navbar({ cartCount }) {
               Home
             </NavLink>
             <NavLink
-              to="/top-rated"
+              to="/ComingSoon"
               className={({ isActive }) =>
                 `hover:text-gray-300 transition-colors ${
                   isActive ? "text-blue-500 font-semibold" : ""
                 }`
               }
             >
-              Top Rated
+              Coming Soon
             </NavLink>
           </div>
         </div>
