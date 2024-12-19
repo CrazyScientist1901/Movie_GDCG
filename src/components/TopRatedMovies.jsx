@@ -19,8 +19,7 @@ export default function TopRated() {
           }
         );
 
-        // Log the response status, headers, and text for debugging
-        console.log("Response Status:", response.status);
+        // Log the status and raw response for debugging
         const responseText = await response.text();
         console.log("Response Text:", responseText);
 
@@ -29,11 +28,12 @@ export default function TopRated() {
         }
 
         const data = JSON.parse(responseText);
-
-        // Log the full response for debugging
+        
+        // Log the entire response to inspect its structure
         console.log("API Response Data:", data);
 
-        if (data?.data?.movies?.edges) {
+        // Check the response structure directly
+        if (data && data.data && data.data.movies && data.data.movies.edges) {
           const transformedMovies = data.data.movies.edges.map((edge, index) => ({
             id: edge.node.id || `movie-${index}`,
             name: edge.node.titleText?.text || 'Unknown Title',
@@ -44,7 +44,7 @@ export default function TopRated() {
           setMovies(transformedMovies);
           setIsLoading(false);
         } else {
-          throw new Error('Invalid movie data format');
+          throw new Error('Invalid movie data format or missing data');
         }
 
       } catch (err) {
