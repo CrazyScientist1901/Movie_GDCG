@@ -60,13 +60,16 @@ export default function MovieList() {
   }, [cart]);
 
   const addToCart = (movie) => {
-    if (cart.some((item) => item.id === movie.id)) {
-      alert("This movie is already in the cart!");
-      return;
-    }
-    setCart((prevCart) => [...prevCart, movie]);
-    alert(`${movie.name} added to cart!`);
-  };
+  if (cart.some((item) => item.id === movie.id)) {
+    alert("This movie is already in the cart!");
+    return;
+  }
+  const updatedCart = [...cart, movie];
+  setCart(updatedCart);
+  localStorage.setItem("cart", JSON.stringify(updatedCart)); // Save to local storage
+  alert(`${movie.name} added to cart!`);
+};
+
 
   const closeModal = () => {
     setSelectedMovie(null);
