@@ -5,49 +5,42 @@ import React, { useState, useEffect } from "react";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import MovieList from "./components/MovieList";
-import TopRatedMovies from "./components/TopRatedMovies"; // Added TopRatedMovies component
+import TopRatedMovies from "./components/TopRatedMovies";
 import CartItems from "./components/CartItems";
 import HomePage from "./components/HomePage"; // Added HomePage component
 import toast from "react-hot-toast"; // For displaying notification toasts
-import { BrowserRouter, Routes, Route } from "react-router-dom"; // Corrected import for routing
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 export default function App() {
-  // State management for cart items
-  // Initialize cart from localStorage if exists, otherwise start with an empty array
+  // State for managing cart items
   const [cart, setCart] = useState(() => {
     const storedCart = localStorage.getItem("cart");
     return storedCart ? JSON.parse(storedCart) : [];
   });
 
-  // Effect to synchronize cart state with localStorage
-  // Runs every time cart state changes
+  // Sync cart state with localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
   // Function to add a movie to the cart
-  const addToCart = async (movie) => {
-    const movieInCart = cart.find((item) => item.id === movie.id);
+  const addToCart = (movie) => {
+    const isMovieInCart = cart.some((item) => item.id === movie.id);
 
-    if (movieInCart) {
+    if (isMovieInCart) {
       toast.error("Item is already in the cart.");
     } else {
-      try {
-        setCart([...cart, movie]);
-        toast.success("Item added to the cart.");
-      } catch (error) {
-        console.error("Error while fetching recommendations:", error);
-        toast.error("Failed to fetch recommendations.");
-      }
+      setCart((prevCart) => [...prevCart, movie]);
+      toast.success("Item added to the cart.");
     }
   };
 
   // Function to remove a movie from the cart
   const removeFromCart = (movieId) => {
-    const movieInCart = cart.find((movie) => movie.id === movieId);
+    const isMovieInCart = cart.some((movie) => movie.id === movieId);
 
-    if (movieInCart) {
-      setCart(cart.filter((movie) => movie.id !== movieId));
+    if (isMovieInCart) {
+      setCart((prevCart) => prevCart.filter((movie) => movie.id !== movieId));
       toast.success("Item removed from the cart.");
     } else {
       toast.error("Item is not in the cart.");
@@ -57,20 +50,18 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="bg-black text-white">
-         <Navbar cartCount={cart.length} />
+        <Navbar cartCount={cart.length} />
         <Routes>
-          <Route
-            path="/"
-            element={<HomePage addToCart={addToCart} />}
-          />
-          {/* Route for Home/MovieList */}
-          <Route path="/" element={<MovieList />} />
+          {/* Route for the home page */}
+          <Route path="/" element={<HomePage addToCart={addToCart} />} />
 
-          {/* Optional: Route for MovieList directly */}
-          <Route path="/MovieList" element={<MovieList />} />
+          {/* Route for MovieList */}
+          <Route path="/movielist" element={<MovieList addToCart={addToCart} />} />
 
-          {/* Other routes */}
+          {/* Route for Top Rated Movies */}
           <Route path="/top-rated" element={<TopRatedMovies />} />
+
+          {/* Route for Cart */}
           <Route
             path="/cart"
             element={<CartItems cart={cart} removeFromCart={removeFromCart} />}
