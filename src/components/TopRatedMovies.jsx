@@ -9,24 +9,29 @@ export default function TopRated() {
     const fetchTopRatedMovies = async () => {
       try {
         const response = await fetch(
-          '/title/get-coming-soon-movies?homeCountry=US&purchaseCountry=US&currentCountry=US',
+          'https://imdb8.p.rapidapi.com/title/get-coming-soon-movies?homeCountry=US&purchaseCountry=US&currentCountry=US',
           {
             method: 'GET',
             headers: {
               'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
               'x-rapidapi-host': 'imdb8.p.rapidapi.com'
-	}
+            }
           }
         );
+
+        // Log the response status, headers, and text for debugging
+        console.log("Response Status:", response.status);
+        const responseText = await response.text();
+        console.log("Response Text:", responseText);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch top-rated movies: ${response.statusText}`);
         }
 
-        const data = await response.json();
+        const data = JSON.parse(responseText);
 
         // Log the full response for debugging
-        console.log(data);
+        console.log("API Response Data:", data);
 
         if (data?.data?.movies?.edges) {
           const transformedMovies = data.data.movies.edges.map((edge, index) => ({
