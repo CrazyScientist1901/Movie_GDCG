@@ -64,7 +64,7 @@ export default function App() {
         <Routes>
           {/* Home route */}
           <Route
-            path="/"
+            path="/HomePage"
             element={<HomePage addToCart={addToCart} />}
           />
 
