@@ -13,7 +13,7 @@ export default function MovieList() {
       const response = await fetch('https://imdb8.p.rapidapi.com/title/v2/get-popular?first=20&country=US&language=en-US', {
         method: 'GET',
         headers: {
-          'x-rapidapi-key': 'YOUR_API_KEY', // Replace with your actual API key
+         'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
           'x-rapidapi-host': 'imdb8.p.rapidapi.com',
         },
       });
