@@ -16,7 +16,7 @@ export default function TopRatedMovies() {
                     method: 'GET',
                     headers: {
                         // API key and host for authentication
-                        'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
+                       'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
                       'x-rapidapi-host': 'online-movie-database.p.rapidapi.com'
                     }
                 });
