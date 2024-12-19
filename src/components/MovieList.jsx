@@ -1,85 +1,71 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+import CartItems from "./CartItems"; // Assuming CartItems is the correct component path
 
 export default function MovieList() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedMovie, setSelectedMovie] = useState(null);
-  const [cart, setCart] = useState(() => {
-    // Load cart from local storage
-    const savedCart = localStorage.getItem("cart");
-    return savedCart ? JSON.parse(savedCart) : [];
-  });
+  const [cart, setCart] = useState([]);
 
-  const fetchMovies = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-
+  // Fetch movies from API
+  const fetchMovies = async () => {
     try {
-      const response = await fetch(
-        "https://imdb8.p.rapidapi.com/title/v2/get-popular?first=20&country=US&language=en-US",
-        {
-          method: "GET",
-          headers: {
-            "x-rapidapi-key": "11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008",
-            "x-rapidapi-host": "imdb8.p.rapidapi.com",
-          },
-        }
-      );
+      const response = await fetch('https://imdb8.p.rapidapi.com/title/v2/get-popular?first=20&country=US&language=en-US', {
+        method: 'GET',
+        headers: {
+          'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
+          'x-rapidapi-host': 'imdb8.p.rapidapi.com',
+        },
+      });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch movies");
+        throw new Error('Failed to fetch movies');
       }
 
       const data = await response.json();
       const transformedMovies = data.data.movies.edges.map((edge, index) => ({
         id: edge.node.id || `movie-${index}`,
-        name: edge.node.titleText?.text || "Unknown Title",
+        name: edge.node.titleText?.text || 'Unknown Title',
         rating: edge.node.ratingsSummary?.aggregateRating || 0,
-        image: edge.node.primaryImage?.url || "/images/Dark.png",
+        image: edge.node.primaryImage?.url || '/images/Dark.png',
         genres: edge.node.titleGenres?.genres
           ? edge.node.titleGenres.genres.slice(0, 4).map((g) => g.genre.text)
           : [],
       }));
 
       setMovies(transformedMovies);
+      setIsLoading(false);
     } catch (err) {
       setError(err.message);
-    } finally {
       setIsLoading(false);
     }
-  }, []);
+  };
 
+  // Effect hook to fetch movies when component mounts
   useEffect(() => {
     fetchMovies();
-  }, [fetchMovies]);
+  }, []);
 
-  useEffect(() => {
-    // Save cart to local storage
-    localStorage.setItem("cart", JSON.stringify(cart));
-  }, [cart]);
-
+  // Add movie to cart
   const addToCart = (movie) => {
-  if (cart.some((item) => item.id === movie.id)) {
-    alert("This movie is already in the cart!");
-    return;
-  }
-  const updatedCart = [...cart, movie];
-  setCart(updatedCart);
-  localStorage.setItem("cart", JSON.stringify(updatedCart)); // Save to local storage
-  alert(`${movie.name} added to cart!`);
-};
+    // Avoid adding duplicate movies
+    if (!cart.some((item) => item.id === movie.id)) {
+      setCart([...cart, movie]);
+      alert(`${movie.name} added to cart!`);
+    } else {
+      alert(`${movie.name} is already in the cart.`);
+    }
+  };
 
-
-  const closeModal = () => {
-    setSelectedMovie(null);
+  // Remove movie from cart
+  const removeFromCart = (id) => {
+    setCart(cart.filter((movie) => movie.id !== id));
   };
 
   if (isLoading) {
     return (
       <div className="p-6 text-white min-h-screen mt-10 text-center">
         <h1 className="text-3xl font-bold">Loading Movies...</h1>
-        <div className="mt-4 spinner"></div>
       </div>
     );
   }
@@ -87,15 +73,7 @@ export default function MovieList() {
   if (error) {
     return (
       <div className="p-6 text-white min-h-screen mt-10 text-center">
-        <h1 className="text-3xl font-bold text-red-500">
-          Error: {error}
-        </h1>
-        <button
-          onClick={fetchMovies}
-          className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-        >
-          Retry
-        </button>
+        <h1 className="text-3xl font-bold text-red-500">Error: {error}</h1>
       </div>
     );
   }
@@ -108,10 +86,6 @@ export default function MovieList() {
           <div
             key={movie.id}
             className="relative group rounded-lg overflow-hidden transition-transform transform hover:scale-105 hover:z-10"
-            onClick={() => setSelectedMovie(movie)}
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => e.key === "Enter" && setSelectedMovie(movie)}
           >
             <div className="relative bg-black text-white rounded-lg shadow-lg border-2 border-yellow-500 hover:border-yellow-400">
               <img
@@ -135,7 +109,7 @@ export default function MovieList() {
                 <div className="mt-4 flex justify-between items-center">
                   <button
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevent modal from opening
+                      e.stopPropagation();
                       addToCart(movie);
                     }}
                     className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600"
@@ -149,33 +123,8 @@ export default function MovieList() {
         ))}
       </div>
 
-      {/* Modal for Movie Details */}
-      {selectedMovie && (
-        <div
-          className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
-          onClick={closeModal}
-        >
-          <div
-            className="bg-white text-black p-6 rounded-lg w-1/3"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 className="text-2xl font-semibold">{selectedMovie.name}</h2>
-            <img
-              src={selectedMovie.image}
-              alt={selectedMovie.name}
-              className="w-full h-64 object-cover rounded-lg my-4"
-            />
-            <p className="text-lg">Rating: {selectedMovie.rating}/10</p>
-            <p className="mt-2">{selectedMovie.genres.join(", ")}</p>
-            <button
-              onClick={closeModal}
-              className="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-            >
-              Close
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Passing cart to CartItems component */}
+      <CartItems cart={cart} removeFromCart={removeFromCart} />
     </div>
   );
 }
