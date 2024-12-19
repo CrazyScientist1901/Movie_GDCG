@@ -64,7 +64,7 @@ export default function App() {
         <Routes>
           {/* Home route */}
           <Route
-            path="/MovieList"
+            path="/"
             element={<HomePage addToCart={addToCart} />}
           />
 
@@ -76,6 +76,7 @@ export default function App() {
             path="/cart"
             element={<CartItems cart={cart} removeFromCart={removeFromCart} />}
           />
+          
         </Routes>
       </div>
     </BrowserRouter>
