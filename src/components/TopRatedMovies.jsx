@@ -18,7 +18,7 @@ export default function TopRatedMovies() {
                     'x-rapidapi-key': '11356e5d0bmsh653865409d5be73p1e9de0jsna08674456008',
                     'x-rapidapi-host': 'online-movie-database.p.rapidapi.com',
                     },
-                  }
+                  });
                 
                 // Throw an error if the response is not OK
                 if (!response.ok) {
