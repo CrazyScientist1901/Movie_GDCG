@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export default function TopRatedMovies() {
+export default function ComingSoon() {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -84,7 +84,7 @@ export default function TopRatedMovies() {
   // Render the list of movies
   return (
     <div className="p-6 text-white min-h-screen mt-10">
-      <h1 className="text-3xl font-bold text-center mb-6">Popular Movies</h1>
+      <h1 className="text-3xl font-bold text-center mb-6">Coming Soon</h1>
       {/* Responsive grid layout for movie cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {/* Map through movies and create a card for each */}
