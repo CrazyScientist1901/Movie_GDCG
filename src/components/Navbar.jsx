@@ -1,23 +1,21 @@
 import { Search, ShoppingCart } from "lucide-react";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom"; // Fix the import here
 
 export default function Navbar({ cartCount }) {
   return (
     <nav className="bg-black text-white p-4">
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <NavLink to="/">
-            <p className="text-xl font-bold">
-              GdgMovie
-            </p>
+          <NavLink to="/" className="text-xl font-bold hover:text-gray-300">
+            GdgMovie
           </NavLink>
           <div className="hidden md:flex space-x-4">
-            <a href="#" className="hover:text-gray-300">
+            <NavLink to="/" className="hover:text-gray-300">
               Home
-            </a>
-            <a href="#" className="hover:text-gray-300">
+            </NavLink>
+            <NavLink to="/categories" className="hover:text-gray-300">
               Categories
-            </a>
+            </NavLink>
             <NavLink to="/top-rated" className="hover:text-gray-300">
               Top Rated
             </NavLink>
